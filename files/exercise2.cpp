@@ -57,6 +57,8 @@ Student* readStudents(const int size) {
         ifs >> result[i].firstName >> result[i].lastName >> result[i].facultyNumber >> result[i].takenCourses >> result[i].averageGrade >> result[i].hasTakenAllCourses;
     }
 
+    delete[] buffer;
+
     return result;
 }
 
