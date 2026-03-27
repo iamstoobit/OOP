@@ -1,3 +1,6 @@
 .vscode/
+seminars/
 *.txt
 *.exe
+*.png
+*.bin
