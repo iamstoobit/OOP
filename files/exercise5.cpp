@@ -76,7 +76,7 @@ bool readInt(std::istream& is, short& number) {
     }
 }
 
-//a)
+//a) прочитане на данни за плод от подаден текстов поток (използвайте типа istream). Валидирайте входа за всякакви грешки.
 Fruit readFromTxt(std::istream& is) {
     int curPos = is.tellg();
     Fruit result;
@@ -110,42 +110,35 @@ Fruit readFromTxt(std::istream& is) {
         }
     }
 
-    if(readInt(is, colour)) {
-        result.colour = (Colour)colour;
-    }
-
-    else {
-        is.seekg(curPos);
-        return result;
-    }
-
-    short stats[6];
-    for(int i = 0; i < 6; ++i) {
+    short stats[7];
+    for(int i = 0; i < 7; ++i) {
         if(!readInt(is, stats[i])) {
             is.seekg(curPos);
             return result;
         }
     }
-
-    result.oneYear = (bool)stats[0];
-    result.tropical = (bool)stats[1];
-    result.sweet = (bool)stats[2];
-    result.withBone = (bool)stats[3];
-    result.growsOnTrees = (bool)stats[4];
-    result.kcal = stats[5];
+    
+    result.colour = (Colour)stats[0];
+    result.oneYear = (bool)stats[1];
+    result.tropical = (bool)stats[2];
+    result.sweet = (bool)stats[3];
+    result.withBone = (bool)stats[4];
+    result.growsOnTrees = (bool)stats[5];
+    result.kcal = stats[6];
 
     is.seekg(curPos);
 
     return result;
 }
-//б)
+//б) записване на данни за плод в подаден текстов поток (използвайте типа оstream). Важно - форматът на изход трябва да
+//е валиден за последващ вход (каквото е записано трябва да може да се прочете коректно).
 void writeInTxt(std::ostream& os, const Fruit& fruit) {
     int curPos = os.tellp();
     os << fruit.name << ',' << fruit.colour << ',' << fruit.oneYear << ',' <<
         fruit.tropical << ',' << fruit.sweet << ',' << fruit.withBone << ',' <<
         fruit.growsOnTrees << ',' << fruit.kcal << '\n';
 }
-//в)
+//в) записване на данни за плод в подаден двоичен файл (използвайте типа ofstream).
 bool writeInBin(const char* file, const Fruit& fruit) {
     std::ofstream ofs(file, std::ios::binary | std::ios::app);
 
@@ -173,9 +166,46 @@ bool readFromBin(std::ifstream& ifs, Fruit& destination) {
     return false;
 }
 
-int compare(const Fruit& lhs, const Fruit& rhs);
+//д) сравнение на два плода за равенство - като критерии за равенство използвайте името и свойствата.
+//Приемаме, че може да имате например две ябълки, които са с различен цвят и енергийност, но ще ги считаме за равни.
+int compare(const Fruit& lhs, const Fruit& rhs) {
+    /*char name[16];
+    bool oneYear;
+    bool tropical;
+    bool sweet;
+    bool withBone;
+    bool growsOnTrees;*/
+    int result = strcmp(lhs.name, rhs.name);
+    if(result == 0) {
+        if(lhs.oneYear == rhs.oneYear) {
+            if(lhs.tropical == rhs.tropical) {
+                if(lhs.sweet == rhs.sweet) {
+                    if(lhs.withBone == rhs.withBone) {
+                        if(lhs.growsOnTrees == rhs.growsOnTrees) {
+                            return 0;
+                        }
 
-void sortFruits(Fruit*& arr);
+                        else return lhs.growsOnTrees - rhs.growsOnTrees;
+                    }
+
+                    else return lhs.withBone - rhs.withBone;
+                }
+
+                else return lhs.sweet - rhs.sweet;
+            }
+
+            else return lhs.tropical - rhs.tropical;
+        }
+
+        else return lhs.oneYear - rhs.oneYear;
+    }
+
+    else return result;
+}
+
+//e) функция, която подрежда (сортира) масив от плодове по азбучен ред на името им.
+//Ако имат равни имена, нека по-малък е плода с по-ниска енергийност.
+void sortFruits(Fruit*& arr) {}
 
 void printFromFile(const char* file);
 
