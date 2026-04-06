@@ -18,9 +18,9 @@ int main() {
 
     d3.print();
 
-    d3.setYear(1956);
-    d3.setMonth(2);
-    d3.setDay(8);
+    d3.setYear(2061);
+    d3.setMonth(3);
+    d3.setDay(20);
 
     std::cout << d3.dayOfWeek();
 }

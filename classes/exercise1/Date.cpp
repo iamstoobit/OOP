@@ -37,64 +37,66 @@ int Date::getYear() const {
 void Date::setDay(int day) {
     if(0 < day && day < 31) {
         switch(this->month) {
-            case 1: {
+            case 1:
                 this->day = day;
                 break;
-            }
-            case 2: {
+
+            case 2:
                 if(day <= 28 || (isLeapYear() && day <= 29)) {
                     this->day = day;
                 }
                 break;
-            }
-            case 3: {
+
+            case 3:
                 this->day = day;
                 break;
-            }
-            case 4: {
+
+            case 4:
                 if(day <= 30) {
                     this->day = day;
                 }
                 break;
-            }
-            case 5: {
+
+            case 5:
                 this->day = day;
                 break;
-            }
-            case 6: {
+
+            case 6:
                 if(day <= 30) {
                     this->day = day;
                 }
                 break;
-            }
-            case 7: {
+
+            case 7:
                 this->day = day;
                 break;
-            }
-            case 8: {
+
+            case 8:
                 this->day = day;
                 break;
-            }
-            case 9: {if(day <= 30) {
-                    this->day = day;
-                }
-                break;
-            }
-            case 10: {
-                this->day = day;
-                break;
-            }
-            case 11: {
+
+            case 9: 
                 if(day <= 30) {
                     this->day = day;
                 }
                 break;
-            }
-            case 12: {
+
+            case 10:
                 this->day = day;
                 break;
-            }
-            default: break;
+
+            case 11:
+                if(day <= 30) {
+                    this->day = day;
+                }
+                break;
+
+            case 12:
+                this->day = day;
+                break;
+
+            default:
+                break;
         }
     }
 }
@@ -130,12 +132,69 @@ void Date::print() const {
 }
 
 int Date::dayOfWeek() const {
-    int monthConstant = getMonthConstant();
+    // Get the year code
+    int yearCode = this->year % 100;
+    yearCode += (yearCode / 4);
 
-    int result = this->year % 100 + ((this->year % 100) / 4) + monthConstant + this->day;
+    bool leap = isLeapYear();
+    if(leap) {
+        yearCode--;
+    }
 
-    if((this->month == 1 || this->month == 2) && this->isLeapYear()) {
-        result -= 1;
+    yearCode %= 7;
+
+    yearCode += getCenturyCode(this->year);
+
+    int result = this->day + yearCode;
+    switch (this->month) {
+        case 1:
+            result = result + 6 - leap;
+            break;
+
+        case 2:
+            result = result + 2 - leap;
+            break;
+
+        case 3:
+            result += 2;
+            break;
+        
+        case 4:
+            result += 5;
+            break;
+        
+        // May is + 0
+
+        case 6:
+            result += 3;
+            break;
+        
+        case 7:
+            result += 5;
+            break;
+        
+        case 8:
+            result += 1;
+            break;
+        
+        case 9:
+            result += 4;
+            break;
+        
+        case 10:
+            result += 6;
+            break;
+        
+        case 11:
+            result += 2;
+            break;
+        
+        case 12:
+            result += 4;
+            break;
+        
+        default:
+            break;
     }
 
     return result % 7;
@@ -149,12 +208,12 @@ void Date::copyFrom(const Date& other) {
     this->year = other.year;
 }
 
-int Date::getMonthConstant() const {
-    if(this->month == 1 || this->month == 10) return 6;
-    else if(this->month == 4 || this->month == 7) return 5;
-    else if(this->month == 9 || this->month == 12) return 4;
-    else if(this->month == 5) return 0;
-    else if(this->month == 6) return 3;
-    else if(this->month == 8) return 1;
-    else return 2;
+int Date::getCenturyCode(int year) const {
+    switch((year / 100) % 4) {
+        case 0: return 0;
+        case 1: return 5;
+        case 2: return 3;
+        case 3: return 1;
+        default: return -1;
+    }
 }

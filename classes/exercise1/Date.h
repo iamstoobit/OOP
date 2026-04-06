@@ -25,7 +25,7 @@ public:
 
 private:
     void copyFrom(const Date& other);
-    int getMonthConstant() const;
+    int getCenturyCode(int year) const;
 
     int day;
     int month;
