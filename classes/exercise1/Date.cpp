@@ -6,6 +6,12 @@ Date::Date() {
     this->year = 0;
 }
 
+Date::Date(const int day, const int month, const int year) {
+    if(!setYear(year) || !setMonth(month) || !setDay(day)) {
+        throw (std::invalid_argument) "Invalid date";
+    };
+}
+
 Date::Date(const Date& other) {
     try {
         copyFrom(other);
@@ -34,81 +40,87 @@ int Date::getYear() const {
     return this->year;
 }
 
-void Date::setDay(int day) {
+bool Date::setDay(int day) {
     if(0 < day && day < 31) {
         switch(this->month) {
             case 1:
                 this->day = day;
-                break;
+                return true;
 
             case 2:
                 if(day <= 28 || (isLeapYear() && day <= 29)) {
                     this->day = day;
                 }
-                break;
+                return true;
 
             case 3:
                 this->day = day;
-                break;
+                return true;
 
             case 4:
                 if(day <= 30) {
                     this->day = day;
                 }
-                break;
+                return true;
 
             case 5:
                 this->day = day;
-                break;
+                return true;
 
             case 6:
                 if(day <= 30) {
                     this->day = day;
                 }
-                break;
+                return true;
 
             case 7:
                 this->day = day;
-                break;
+                return true;
 
             case 8:
                 this->day = day;
-                break;
+                return true;
 
             case 9: 
                 if(day <= 30) {
                     this->day = day;
                 }
-                break;
+                return true;
 
             case 10:
                 this->day = day;
-                break;
+                return true;
 
             case 11:
                 if(day <= 30) {
                     this->day = day;
                 }
-                break;
+                return true;
 
             case 12:
                 this->day = day;
-                break;
+                return true;
 
             default:
                 break;
         }
     }
+
+    return false;
 }
 
-void Date::setMonth(int month) {
+bool Date::setMonth(int month) {
     if(0 < month && month <= 12) {
         this->month = month;
+        return true;
     }
+
+    return false;
 }
 
-void Date::setYear(int year) {
+bool Date::setYear(int year) {
     this->year = year;
+    return true;
 }
 
 bool Date::isLeapYear() const {

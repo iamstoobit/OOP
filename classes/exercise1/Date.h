@@ -2,10 +2,12 @@
 #define DATE_H
 
 #include <iostream>
+#include <exception>
 
 class Date{
 public:
     Date();
+    Date(const int day, const int month, const int year);
     Date(const Date& other);
     Date& operator=(const Date& other);
     ~Date() = default;
@@ -14,9 +16,9 @@ public:
     int getMonth() const;
     int getYear() const;
 
-    void setDay(int day);
-    void setMonth(int month);
-    void setYear(int year);
+    bool setDay(int day);
+    bool setMonth(int month);
+    bool setYear(int year);
 
     bool isLeapYear() const;
     void print() const;
