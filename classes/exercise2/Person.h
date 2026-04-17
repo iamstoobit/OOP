@@ -31,7 +31,6 @@ public:
     void print() const;
 
 private:
-    void free();
     void copyFrom(const Person& other);
 
     char* firstName;

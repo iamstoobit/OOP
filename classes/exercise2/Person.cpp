@@ -3,9 +3,14 @@
 Person::Person(const char* fName, const char* mName, const char* lName, Date DOB, Gender pGender) :
                         firstName(nullptr), middleName(nullptr), lastName(nullptr),
                         DOB(DOB), gender(((pGender == Gender::MALE) || (pGender == Gender::FEMALE)) ? pGender : Gender::UNKNOWN) {
-    setFirstName(fName);
-    setMiddleName(mName);
-    setLastName(lName);
+    try {
+        setFirstName(fName);
+        setMiddleName(mName);
+        setLastName(lName);
+    } catch(...) {
+        delete[] this->firstName;
+        delete[] this->middleName;
+    }
 };
 
 Person::Person(const Person& other) : firstName(nullptr), middleName(nullptr), lastName(nullptr),
@@ -15,7 +20,6 @@ Person::Person(const Person& other) : firstName(nullptr), middleName(nullptr), l
 
 Person& Person::operator=(const Person& other) {
     if(this != &other) {
-        free();
         copyFrom(other);
     }
 
@@ -23,7 +27,14 @@ Person& Person::operator=(const Person& other) {
 }
 
 Person::~Person() {
-    free();
+    delete[] this->firstName;
+    this->firstName = nullptr;
+
+    delete[] this->middleName;
+    this->middleName = nullptr;
+    
+    delete[] this->lastName;
+    this->lastName = nullptr;
 }
 
 Date Person::getDOB() const {
@@ -36,11 +47,12 @@ int Person::getGender() const {
 
 bool Person::setFirstName(const char* newName) {
     try {
+        char* temp = new char[strlen(newName) + 1];
+        strcpy(temp, newName);
         delete[] this->firstName;
-        this->firstName = new char[strlen(newName) + 1];
-        strcpy(this->firstName, newName);
+        this->firstName = temp;
     } catch(...) {
-        return false;
+        throw;
     }
 
     return true;
@@ -48,11 +60,12 @@ bool Person::setFirstName(const char* newName) {
 
 bool Person::setMiddleName(const char* newName) {
     try {
+        char* temp = new char[strlen(newName) + 1];
+        strcpy(temp, newName);
         delete[] this->middleName;
-        this->middleName = new char[strlen(newName) + 1];
-        strcpy(this->middleName, newName);
+        this->middleName = temp;
     } catch(...) {
-        return false;
+        throw;
     }
 
     return true;
@@ -60,11 +73,12 @@ bool Person::setMiddleName(const char* newName) {
 
 bool Person::setLastName(const char* newName) {
     try {
+        char* temp = new char[strlen(newName) + 1];
+        strcpy(temp, newName);
         delete[] this->lastName;
-        this->lastName = new char[strlen(newName) + 1];
-        strcpy(this->lastName, newName);
+        this->lastName = temp;
     } catch(...) {
-        return false;
+        throw;
     }
 
     return true;
@@ -76,19 +90,14 @@ void Person::print() const {
     std::cout << this->gender << '\n';
 }
 
-void Person::free() {
-    delete[] this->firstName;
-    this->firstName = nullptr;
-
-    delete[] this->middleName;
-    this->middleName = nullptr;
-    
-    delete[] this->lastName;
-    this->lastName = nullptr;
-}
-
 void Person::copyFrom(const Person& other) {
-    setFirstName(other.firstName);
-    setMiddleName(other.middleName);
-    setLastName(other.lastName);
+    try {
+        setFirstName(other.firstName);
+        setMiddleName(other.middleName);
+        setLastName(other.lastName);
+    } catch(...) {
+        delete[] this->firstName;
+        delete[] this->middleName;
+        throw;
+    }
 }
